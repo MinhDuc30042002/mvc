@@ -29,7 +29,7 @@
                         <a class="inline-block py-2 px-4 text-black font-bold no-underline" href="index.php?controller=newfeed">Newfeed</a>
                     </li>
                     <li class="mr-3">
-                        <a class="inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="index.php?controller=profile&action=posts">Bài viết</a>
+                        <a class="inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="index.php?controller=posts">Bài viết</a>
                     </li>
                     <li class="mr-3">
                         <a class="inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="#">Tin tức</a>

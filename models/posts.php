@@ -9,6 +9,7 @@ class Posts
     public $title;
     public $name;
 
+
     public function __construct($id, $content, $image, $user_id, $title, $name)
     {
         $this->id = $id;
@@ -33,7 +34,7 @@ class Posts
     {
         $db = DB::getInstance();
 
-        $query = "SELECT p.* FROM posts as p INNER JOIN users as u ON p.user_id = u.id WHERE p.user_id = $id";
+        $query = "SELECT p.* FROM posts as p INNER JOIN users as u ON p.user_id = u.id WHERE p.user_id = $id ORDER BY p.id DESC";
         $req = $db->query($query)->fetchAll();
 
         return $req;
@@ -76,9 +77,9 @@ class Posts
         return $req;
     }
 
-    public static function first_posts()
+    public static function first_posts($id)
     {
-        $id = Request::firstOrFail();
+        // $id = Request::firstOrFail();
         $posts = Posts::first($id);
         return $posts;
     }

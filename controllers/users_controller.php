@@ -79,12 +79,10 @@ class UsersController extends Base
         $data = Request::get_all_inputs();
         $input = $user->store_user($data);
 
-
-
-        // if (!is_array($input['user'])) {
-        //     User::store($input['user']);
-        //     header('location: index.php?controller=users');
-        // }
-        // return $this->render('create', $input);
+        if (!is_array($input['user'])) {
+            User::store($input['user']);
+            header('location: index.php?controller=users');
+        }
+        return $this->render('create', $input);
     }
 }

@@ -5,11 +5,12 @@
 </a>
 <br>
 <!-- Modal toggle -->
-<a href="index.php?controller=profile&action=add">
+<a href="index.php?controller=posts&action=create">
     <button id="button" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
         Thêm bài viết
     </button>
 </a>
+
 <?php
 if (isset($_SESSION['success'])) { ?>
     <div id="toast-success" class="mt-2 flex items-center p-4 mb-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow" role="alert">
@@ -51,16 +52,20 @@ if (isset($_SESSION['updated'])) { ?>
 <?= $data['null'] ?? '' ?>
 <?php foreach ($data['posts'] as $news) { ?>
     <div class="m-auto mb-2 max-w-lg bg-white rounded-lg border border-gray-200 shadow-md">
-        <img src="<?= $news['image'] ?>" onerror="this.onerror=null; this.src=''" id="image" class="rounded-t-lg">
+        <?php foreach (json_decode($news['image']) as $image) { ?>
+            <img class="rounded-t-lg" src="<?= 'upload/' . $image ?>">
+        <?php } ?>
         <div class="p-5">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><?= $news['title'] ?></h5>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $news['content'] ?></p>
-            <a href="index.php?controller=profile&action=first&id=<?= $news['id'] ?>" class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <a href="index.php?controller=posts&action=show&id=<?= $news['id'] ?>" class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                 Chỉnh sửa
             </a>
+
             <a onclick="return confirm('Bạn muốn xóa bài này ?')" href="index.php?controller=profile&action=destroy&id=<?= $news['id'] ?>" class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                 Xóa bài viết
             </a>
         </div>
     </div>
+
 <?php } ?>

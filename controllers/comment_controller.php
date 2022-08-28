@@ -39,4 +39,14 @@ class CommentController extends Base
         Comment::destroy($id_comment);
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
+
+    public function store()
+    {
+
+        $comment = $_POST['comment'];
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $created_at = date('F j, Y, g:i a');
+        Comment::comment($comment, $_SESSION['i'], $_GET['id'], $created_at);
+        header('location: ' . $_SERVER['HTTP_REFERER']);
+    }
 }

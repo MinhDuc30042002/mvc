@@ -31,7 +31,6 @@ class Authentication extends RuleUser
         } else {
             $error = $this->msg['unregister'];
         }
-
         $error = array('email' => $error_email ?? '', 'password' => $error_password ?? '', 'unregister' => $error ?? '');
         return $error;
     }

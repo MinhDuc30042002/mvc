@@ -4,7 +4,7 @@
     </button>
 </a>
 
-<form action="index.php?controller=profile&action=store" enctype="multipart/form-data" method="POST" class="w-3/4 m-auto p-4">
+<form action="index.php?controller=posts&action=store" enctype="multipart/form-data" method="POST" class="w-3/4 m-auto p-4">
     <h1 class="mb-4 text-lg">Thêm bài viết mới</h1>
 
     <div class="mb-6">
@@ -39,31 +39,7 @@
         </p>
     </div>
 
-    <button id="posts" name="submit" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đăng</button>
+    <button style="display: none" id="posts" name="submit" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đăng</button>
 </form>
 
 <script src="assets/js/index.js"></script>
-<!-- <script>
-    // Step 1
-    const reader = new FileReader()
-    let control = document.getElementById('file_image')
-    var target = document.getElementById("image");
-    const allow_type = ['image/png', 'image/png', 'image/jpeg']
-
-    control.addEventListener('change', (event) => {
-        const files = event.target.files
-
-        // for (let file of files) {
-        if (allow_type.includes(file.type)) {
-            reader.onload = function() {
-                target.src = reader.result
-                document.getElementById('posts').style.display = 'block'
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        } else {
-            target.src = ''
-            document.getElementById('posts').style.display = 'none'
-        }
-        // }
-    });
-</script> -->

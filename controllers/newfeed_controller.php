@@ -18,10 +18,4 @@ class NewFeedController extends Base
         $arr = array('title' => 'Newfeed Page', 'nf' => $newfeed);
         return $this->render('index', $arr);
     }
-
-
-    public function posts()
-    {
-        $posts_id = Request::firstOrFail();
-    }
 }

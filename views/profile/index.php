@@ -5,7 +5,7 @@
             <div class="p-4 md:p-12 text-center lg:text-left">
                 <!-- Image for mobile view-->
                 <div class="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center" style="background-image: url('https://source.unsplash.com/MP0IUfwrn0A')"></div>
-                <form action="index.php?controller=profile&action=edit" method="post">
+                <form action="index.php?controller=profile&action=update" method="post">
                     <h1 class="text-3xl font-bold pt-8 lg:pt-0">
                         <input onkeyup="onKeyUpName()" id="name" type="text" name="name" value="<?= $data['user']->name ?>">
                     </h1>

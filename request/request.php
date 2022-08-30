@@ -16,6 +16,16 @@ class Request
         return $id;
     }
 
+    public static function check_empty($str)
+    {
+        return strlen($str) == 0 ? TRUE : FALSE;
+    }
+
+    public static function replace_tag($str)
+    {
+        return htmlspecialchars(strip_tags(trim($str)));
+    }
+
     public static function get_all_inputs()
     {
         $input_data = $_POST;
@@ -30,18 +40,16 @@ class Request
 
     public static function reArrayFiles($file_post)
     {
-
         $file_ary = array();
         $file_count = count($file_post['name']);
         $file_keys = array_keys($file_post);
 
-        // for ($i = 0; $i < $file_count; $i++) {
-        //     foreach ($file_keys as $key) {
-        //         $file_ary[$i][$key] = $file_post[$key][$i];
-        //     }
-        // }
+        for ($i = 0; $i < $file_count; $i++) {
+            foreach ($file_keys as $key) {
+                $file_ary[$i][$key] = $file_post[$key][$i];
+            }
+        }
 
-        return $file_keys;
+        return $file_ary;
     }
-
 }

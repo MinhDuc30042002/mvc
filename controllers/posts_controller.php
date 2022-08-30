@@ -4,12 +4,17 @@ require_once('request/request.php');
 require_once('models/comments.php');
 require_once('models/posts.php');
 require_once('validation/ValidationProfile.php');
+require_once('validation/ValidationPosts.php');
+
 class PostsController extends Base
 {
 
     public function __construct()
     {
         $this->folder = 'posts';
+        if (!isset($_SESSION['i'])) {
+            header('location: index.php?controller=login');
+        };
     }
 
     public function index()
@@ -40,64 +45,59 @@ class PostsController extends Base
 
     public function store()
     {
-        $validate_profile = new ValidationProfile();
-        $input = Request::get_all_inputs();
+        $validate_posts = new ValidationPosts();
+        $data = $validate_posts->store();
         $files = Request::path_image();
 
-        $files_array = Request::reArrayFiles($files);
-        foreach ($files_array as $file) {
-            $target_file = 'upload/' . $file['name'];
-            move_uploaded_file($file['tmp_name'], $target_file);
+
+        $image = $validate_posts->path_image();
+
+
+        $output = ['data' => $data];
+
+        $title = $output['data']['title'];
+        $content = $output['data']['content'];
+
+
+        if ($title != '' && $image == '') {
+            Posts::store($content, $title, json_encode($files['name']), $_SESSION['i']);
+            $success = ['success' => 'Đã thêm thành công'];
+            return $this->render('create', $success);
+        } else {
+            $output += ['mime' => $image];
+            return $this->render('create', $output);
         }
-
-        // // -------------------------------------------
-
-        // // $target_file = $validate_profile->path_image($file);
-        // // $post = $validate_profile->store($input);
-        // $clean_title = $validate_profile->strip_tags_content($input['title']);
-
-        // $input += ['path' => $files['name']];
-
-        // var_dump($clean_title);
-        // // var_dump($input);
-
-        // if ($input['title'] != '') {
-        //     Posts::store($input['content'], $input['title'], json_encode($files['name']), $_SESSION['i']);
-        //     header('location: index.php?controller=profile&action=posts');
-        // }
-
-        // return $this->render('add', $input);
     }
 
     public function update()
     {
-        $id = Request::firstOrFail();
+        $id = $_GET['id'];
         $posts = Posts::first($id);
+        $validate_posts = new ValidationPosts();
 
-        $input = Request::get_all_inputs();
-        $v = new ValidationProfile();
+        $comment_by_id = Posts::all_comment_by_id($id);
+        $output = $validate_posts->store();
+        $data = ['title' => 'Page', 'output' => $output, 'post' => $posts, 'comment' => $comment_by_id];
+        $title = $data['output']['data']['title']['title'];
+        $content = $data['output']['data']['content'];
 
-        if (isset($_FILES['img'])) {
-            $file = $_FILES['img'];
-            $ext = $v->path_image($file);
-            $input += ['ext' => $ext];
-        }
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
 
-        $image = $input['ext']['image'] ?? $input['image'];
-
-        if ($input['title'] != '') {
-            Posts::update($input['title'], $input['content'], $image, $id);
+        if ($title != '') {
+            Posts::update($title, $content, $id);
             $_SESSION['updated'] = 'Cập nhật thành công';
-            header('location: index.php?controller=profile&action=posts');
+            header('location: index.php?controller=posts');
         }
-        return $this->render('show', $posts);
+        return $this->render('show', $data);
     }
 
     public function destroy()
     {
-        $id = Request::firstOrFail();
+        $id = $_GET['id'];
         Posts::destroy($id);
         $_SESSION['success'] = 'Đã xóa thành công';
-        header('location: index.php?controller=profile&action=posts');
+        header('location: index.php?controller=posts');
     }
 }

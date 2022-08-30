@@ -59,9 +59,9 @@ class Posts
         return $item;
     }
 
-    public static function update($title, $content, $image, $id)
+    public static function update($title, $content, $id)
     {
-        $query = "UPDATE posts SET title = '$title', content = '$content', image = '$image' WHERE id = $id";
+        $query = "UPDATE posts SET title = '$title', content = '$content' WHERE id = $id";
         $db = DB::getInstance();
         $req = $db->prepare($query)->execute();
 
@@ -79,7 +79,6 @@ class Posts
 
     public static function first_posts($id)
     {
-        // $id = Request::firstOrFail();
         $posts = Posts::first($id);
         return $posts;
     }
@@ -102,7 +101,7 @@ class Posts
 
         $query = "SELECT cmt.id as icmt, u.name, comment, cmt.created_at, posts_id ,user_id as uid FROM comments as cmt 
         LEFT JOIN users as u ON cmt.user_id = u.id 
-        WHERE posts_id = $id";
+        WHERE posts_id = $id ORDER BY cmt.id DESC";
         $req = $db->prepare($query);
         $req->execute();
 

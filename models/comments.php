@@ -47,9 +47,9 @@ class Comment
         return $item;
     }
 
-    public static function update_comment($id, $comment, $updated_at)
+    public static function update_comment($id, $comment, $created_at)
     {
-        $query = "UPDATE comments SET comment = '$comment', updated_at = '$updated_at' WHERE id = $id";
+        $query = "UPDATE comments SET comment = '$comment', created_at = '$created_at' WHERE id = $id";
         $db = DB::getInstance();
         $req = $db->prepare($query)->execute();
 

@@ -9,6 +9,9 @@ class NewFeedController extends Base
     public function __construct()
     {
         $this->folder = 'newfeed';
+        if (!isset($_SESSION['i'])) {
+            header('location: index.php?controller=login');
+        };
     }
 
     public function index()

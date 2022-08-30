@@ -24,7 +24,7 @@ $controllers = array(
     'newfeed' => ['index'],
 
     // Bài viết của người dùng (client)
-    'posts' => ['create', 'show', 'store', 'edit', 'index'],
+    'posts' => ['create', 'show', 'store', 'index', 'destroy', 'update'],
 
     // Bình luận của người dùng (client)
     'comment' => ['destroy', 'show', 'edit', 'store']

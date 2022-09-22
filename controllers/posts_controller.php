@@ -5,6 +5,7 @@ require_once('models/comments.php');
 require_once('models/posts.php');
 require_once('validation/ValidationProfile.php');
 require_once('validation/ValidationPosts.php');
+require_once('validation/ValidationComments.php');
 
 class PostsController extends Base
 {
@@ -25,6 +26,17 @@ class PostsController extends Base
             $null = 'Chưa có bài viết nào';
             $data += ['null' => $null];
         }
+        $page = '';
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            if (empty($page)) {
+                $page = 1;
+            }
+        } else {
+            $page = 1;
+        }
+
+        $pagination = Request::pagination($posts);
         return $this->render('posts_by_user', $data);
     }
 
@@ -32,15 +44,57 @@ class PostsController extends Base
     {
         $id = $_GET['id'];
         $posts = Posts::first_posts($id);
-        $comment_by_id = Posts::all_comment_by_id($id);
 
-        $data = ['post' => $posts, 'comment' => $comment_by_id];
+        $comments = Posts::all_comment($id);
+        $cmt_main = array();
+
+        // O(n)
+        // Example 10 comment 
+        // $comment : 10 
+        // is_null($comment['id_reply']) : 10
+        // 2 => $comment['id_reply'] == 0 : 2
+        foreach ($comments as $comment) {
+            if (is_null($comment['id_reply'])) {
+                $cmt_main[$comment['icmt']] = $comment;
+            }
+        }
+
+        foreach ($comments as $replies_level_1) {
+
+            if (isset($cmt_main[$replies_level_1['id_reply']]['icmt'])) {
+                $id_comment = $cmt_main[$replies_level_1['id_reply']]['icmt'];
+
+                if ($id_comment == $replies_level_1['id_reply']) {
+                    $cmt_main[$id_comment]['replies'][$replies_level_1['icmt']] = $replies_level_1;
+                }
+
+                foreach ($comments as $replies_level_2) {
+                    if (isset($cmt_main[$id_comment]['replies'][$replies_level_1['icmt']])) {
+                        $id_replies_level_1 = $cmt_main[$id_comment]['replies'][$replies_level_1['icmt']]['icmt'];
+
+                        if ($id_replies_level_1 == $replies_level_2['id_reply']) {
+                            $cmt_main[$id_comment]['replies'][$replies_level_1['icmt']]['replies'][$replies_level_2['icmt']] = $replies_level_2;
+                        }
+                    }
+                }
+            }
+        }
+        $data = ['post' => $posts, 'comment' => $cmt_main];
         return $this->render('show', $data);
     }
 
     public function create()
     {
         return $this->render('create');
+    }
+
+    public function edit()
+    {
+
+        $id = $_GET['id'];
+        $posts = Posts::first_posts($id);
+        $data = ['data' => $posts];
+        return $this->render('edit', $data);
     }
 
     public function store()
@@ -71,26 +125,23 @@ class PostsController extends Base
 
     public function update()
     {
-        $id = $_GET['id'];
-        $posts = Posts::first($id);
         $validate_posts = new ValidationPosts();
 
-        $comment_by_id = Posts::all_comment_by_id($id);
-        $output = $validate_posts->store();
-        $data = ['title' => 'Page', 'output' => $output, 'post' => $posts, 'comment' => $comment_by_id];
-        $title = $data['output']['data']['title']['title'];
-        $content = $data['output']['data']['content'];
+        $id = $_GET['id'];
+        $post = Posts::first_posts($id);
+        $output = $validate_posts->update_post($post);
 
-        // echo '<pre>';
-        // print_r($data);
-        // echo '</pre>';
+        $data = ['data' => $post, 'output' => $output];
 
-        if ($title != '') {
-            Posts::update($title, $content, $id);
-            $_SESSION['updated'] = 'Cập nhật thành công';
+        $title = $data['output']['title']['title'];
+        $content = $data['output']['content'];
+        $image = $data['output']['image']['img'];
+
+        if ($title != '' && $image != '') {
+            Posts::update($title, $content, $id, $image);
             header('location: index.php?controller=posts');
         }
-        return $this->render('show', $data);
+        return $this->render('edit', $data);
     }
 
     public function destroy()

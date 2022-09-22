@@ -2,7 +2,7 @@
 
 class ValidationPosts extends RuleProfile
 {
-    public $msgs;
+    public $msg;
 
     public function __construct()
     {
@@ -37,9 +37,7 @@ class ValidationPosts extends RuleProfile
         foreach ($f as $file) {
             $target_file = 'upload/' . $file['name'];
 
-            // Kiểm tra người dùng có truyền hình ảnh ?
             if ($file['tmp_name'] != '') {
-                // Nếu có ảnh thì kiểm tra mime của ảnh đó
                 $path_image = $this->allow_type($file['tmp_name']);
 
                 // path_image return string
@@ -88,5 +86,39 @@ class ValidationPosts extends RuleProfile
     {
         $clean = trim(htmlspecialchars(strip_tags($text)));
         return $clean;
+    }
+
+    public function update_post($post)
+    {
+        $input = Request::get_all_inputs();
+        $data = array();
+        // Check if user change value
+        if ($input['title'] != $post['title']) {
+            $title = $this->value_title(Request::replace_tag($input['title']));
+        } else {
+            $title = ['alert' => '', 'title' => $post['title']];
+        }
+
+        if ($input['content'] != $post['content']) {
+            $content = Request::replace_tag($input['content']);
+        } else {
+            $content = $post['content'];
+        }
+
+        // Check user change image
+        if (isset($_FILES['image'])) {
+            $files = $_FILES['image'];
+            $image = $this->path_image();
+            if ($image == '') {
+                $path_image = ['error_img' => '', 'img' => json_encode($files['name'])];
+            } else {
+                $path_image = ['error_img' => $image, 'img' => ''];
+            }
+        } else {
+            $path_image = ['error_img' => '', 'img' => $post['image']];
+        }
+
+        $data = ['title' => $title, 'content' => $content, 'image' => $path_image];
+        return $data;
     }
 }

@@ -59,9 +59,9 @@ class Posts
         return $item;
     }
 
-    public static function update($title, $content, $id)
+    public static function update($title, $content, $id, $image)
     {
-        $query = "UPDATE posts SET title = '$title', content = '$content' WHERE id = $id";
+        $query = "UPDATE posts SET title = '$title', content = '$content', image = '$image' WHERE id = $id";
         $db = DB::getInstance();
         $req = $db->prepare($query)->execute();
 
@@ -94,12 +94,11 @@ class Posts
         $item = $req->fetchAll();
         return $item;
     }
-
-    public static function all_comment_by_id($id)
+    public static function all_comment($id)
     {
         $db = DB::getInstance();
 
-        $query = "SELECT cmt.id as icmt, u.name, comment, cmt.created_at, posts_id ,user_id as uid FROM comments as cmt 
+        $query = "SELECT cmt.id as icmt, u.name, comment, cmt.created_at, posts_id ,user_id as uid, cmt.id_reply FROM comments as cmt 
         LEFT JOIN users as u ON cmt.user_id = u.id 
         WHERE posts_id = $id ORDER BY cmt.id DESC";
         $req = $db->prepare($query);
@@ -107,5 +106,26 @@ class Posts
 
         $item = $req->fetchAll();
         return $item;
+    }
+
+    public static function pagination()
+    {
+        $number_of_result = 1;
+        $rows = count(Posts::all());
+
+        $page_result = ceil($rows / $number_of_result);
+        return $page_result;
+    }
+
+    public static function limit_post($page)
+    {
+        $db = DB::getInstance();
+        $number_of_result = 1;
+        $result = ($page - 1) * $number_of_result;
+
+        $query = "SELECT u.id as id_user, name, p.id as id_posts, image, content, title FROM users as u JOIN posts as p ON u.id = p.user_id ORDER BY p.id DESC LIMIT $result, $number_of_result";
+
+        $req = $db->query($query)->fetchAll();
+        return $req;
     }
 }

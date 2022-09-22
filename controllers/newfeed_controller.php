@@ -16,9 +16,27 @@ class NewFeedController extends Base
 
     public function index()
     {
-        $newfeed = Posts::all();
+        $number_of_result = Posts::pagination();
+        $page = '';
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            if (empty($page)) {
+                $page = 1;
+            }
 
-        $arr = array('title' => 'Newfeed Page', 'nf' => $newfeed);
+            if ($page > $number_of_result) {
+                header('location: index.php?controller=error');
+                // $page = $number_of_result;
+            }
+        } else {
+            $page = 1;
+        }
+        $to = $page - 2 < 1 ? 1 : $page - 2;
+        $from = $page + 2 > $number_of_result ? $number_of_result : $page + 2;
+
+        $posts = Posts::limit_post($page);
+
+        $arr = array('title' => 'Newfeed Page', 'pagination' => $number_of_result, 'posts' => $posts, 'p' => $page, 'to' => $to, 'from' => $from);
         return $this->render('index', $arr);
     }
 }

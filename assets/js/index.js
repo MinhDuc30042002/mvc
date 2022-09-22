@@ -1,6 +1,5 @@
-const update = document.getElementById('update')
-const edit = document.getElementById('id')
-const posts = document.getElementById('posts')
+const btn_action = document.querySelector('button[type=submit]')
+
 
 function onKeyUpName() {
     const value_name = document.getElementById('name').value
@@ -10,11 +9,11 @@ function onKeyUpName() {
     if (value_name.length == 0) {
         error_name.innerHTML = 'Tên bắt buộc'
         error_name.style.color = 'red'
-        update.style.display = 'none'
+        btn_action.style.display = 'none'
     } else {
         error_name.innerHTML = 'Bạn có thể sử dụng tên này'
         error_name.style.color = 'green'
-        update.style.display = 'block'
+        btn_action.style.display = 'block'
     }
 
 }
@@ -29,15 +28,15 @@ function onKeyUpEmail() {
     if (value_email.length == 0) {
         error_email.innerHTML = 'Email bắt buộc'
         error_email.style.color = 'red'
-        update.style.display = 'none'
+        btn_action.style.display = 'none'
     } else if (!pattern.test(value_email)) {
         error_email.innerHTML = 'Email phải có định dạng @ yahoo.com, gmail.com...'
         error_email.style.color = 'red'
-        update.style.display = 'none'
+        btn_action.style.display = 'none'
     } else {
         error_email.innerHTML = 'Địa chỉ email hợp lệ'
         error_email.style.color = 'green'
-        update.style.display = 'block'
+        btn_action.style.display = 'block'
     }
 
 }
@@ -53,15 +52,15 @@ function onKeyUpPassword() {
     if (value_pass.length == 0) {
         error_pass.innerHTML = 'Mật khẩu bắt buộc'
         error_pass.style.color = 'red'
-        update.style.display = 'none'
+        btn_action.style.display = 'none'
     } else if (!pattern.test(value_pass)) {
         error_pass.innerHTML = 'Ít nhất 8 ký tự, bao gồm 2 số và ít nhất 1 dấu chấm'
         error_pass.style.color = 'red'
-        update.style.display = 'none'
+        btn_action.style.display = 'none'
     } else {
         error_pass.innerHTML = 'Bạn có thể sử dụng mật khẩu này'
         error_pass.style.color = 'green'
-        update.style.display = 'block'
+        btn_action.style.display = 'block'
     }
 
 }
@@ -92,11 +91,11 @@ function onKeyUpTitle() {
     if (title.length == 0) {
         error.innerHTML = 'Nhập tiêu đề'
         error.style.color = 'red'
-        posts.style.display = 'none'
+        btn_action.style.display = 'none'
     } else {
         error.innerHTML = 'Bạn có thể sử dụng tên này'
         error.style.color = 'green'
-        posts.style.display = 'block'
+        btn_action.style.display = 'block'
     }
 }
 
@@ -112,4 +111,48 @@ function commentPosts() {
     }
 }
 
+
+function previewFiles() {
+    var preview = document.querySelector('#preview');
+    var files = document.querySelector('input[type=file]').files;
+    let old_image = document.querySelectorAll('img')
+
+
+    function readAndPreview(file) {
+        var reader = new FileReader();
+
+
+        let allow_type = ['image/png', 'image/jpeg', 'image/jpg']
+        let type = allow_type.find(t => t == file.type)
+        if (type) {
+            reader.addEventListener("load", function () {
+                old_image.forEach(e => {
+                    e.src = ''
+                });
+                // khi gọi đối tượng Image này mặc định constructor sẽ tạo 1 thẻ image
+                let image = new Image();
+                image.src = reader.result;
+                image.setAttribute('class', 'image')
+                preview.appendChild(image);
+            }, false);
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+
+    if (files) {
+        [].forEach.call(files, readAndPreview);
+    }
+}
+
+
+function removeImage() {
+    let f = document.querySelector('input[type=file]')
+
+    f.addEventListener("click", function () {
+        let img = document.querySelectorAll('img')
+        img.forEach(element => element.remove())
+    })
+}
 

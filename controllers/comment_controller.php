@@ -43,8 +43,8 @@ class CommentController extends Base
 
     public function destroy()
     {
-        $id_comment = Request::firstOrFail();
-        Comment::destroy($id_comment);
+        $id = $_GET['id'];        
+        Comment::destroy($id);
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
 

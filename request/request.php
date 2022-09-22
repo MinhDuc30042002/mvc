@@ -52,4 +52,20 @@ class Request
 
         return $file_ary;
     }
+
+    public static function pagination($data)
+    {
+        $number_of_result = 2;
+        $rows = count($data);
+
+        $page_result = ceil($rows / $number_of_result);
+        return $page_result;
+    }
+
+    public static function render_comment($variables)
+    {
+        extract($variables);
+        include('views/layout/comment.php');
+    }
+
 }

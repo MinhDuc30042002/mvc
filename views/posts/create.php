@@ -49,7 +49,6 @@ if (isset($data['success'])) { ?>
                     <div class="flex flex-wrap w-1/3">
                         <div class="w-full p-1 md:p-2">
                             <div id="preview">
-                                <!-- <img id="image" src="" alt=""> -->
                             </div>
                         </div>
                     </div>
@@ -67,50 +66,6 @@ if (isset($data['success'])) { ?>
 <script src="assets/js/index.js"></script>
 
 <script>
-    function previewFiles() {
-        var preview = document.querySelector('#preview');
-        var files = document.querySelector('input[type=file]').files;
-
-        let image = document.querySelector('#image')
-
-
-        function readAndPreview(file) {
-            var reader = new FileReader();
-
-
-            let allow_type = ['image/png', 'image/jpeg', 'image/jpg']
-            let type = allow_type.find(t => t == file.type)
-            if (type) {
-                reader.addEventListener("load", function(event) {
-                    // khi gọi đối tượng Image này mặc định constructor sẽ tạo 1 thẻ image
-                    let image = new Image();
-                    // image.src = event.target.result
-                    image.src = reader.result;
-                    image.setAttribute('class', 'image')
-                    preview.appendChild(image);
-                }, false);
-
-                reader.readAsDataURL(file);
-            }
-        }
-
-
-        if (files) {
-            [].forEach.call(files, readAndPreview);
-        }
-    }
-
-
-    function removeImage() {
-        let f = document.querySelector('input[type=file]')
-
-        f.addEventListener("click", function() {
-            let img = document.querySelectorAll('img')
-            img.forEach(element => element.remove())
-        })
-    }
-
-
     let error_title = document.getElementById('title_error')
 
     if (error_title.innerText == 'Bạn có thể dùng tiêu đề này') {

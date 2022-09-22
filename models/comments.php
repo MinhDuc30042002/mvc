@@ -9,8 +9,9 @@ class Comment
     public $posts_id;
     public $created_at;
     public $updated_at;
+    public $id_reply;
 
-    public function __construct($id, $content, $user_id, $posts_id, $created_at, $updated_at)
+    public function __construct($id, $content, $user_id, $posts_id, $created_at, $updated_at, $id_reply)
     {
         $this->id = $id;
         $this->content = $content;
@@ -18,6 +19,7 @@ class Comment
         $this->posts_id = $posts_id;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->id_reply = $id_reply;
     }
 
     public static function comment($comment, $user_id, $posts_id, $created_at)
@@ -53,6 +55,14 @@ class Comment
         $db = DB::getInstance();
         $req = $db->prepare($query)->execute();
 
+        return $req;
+    }
+
+    public static function replies_commemt($comment, $user_id, $posts_id, $created_at, $id_reply)
+    {
+        $query = "INSERT INTO comments (comment, user_id, posts_id, created_at, id_reply) VALUES ('$comment', $user_id, $posts_id, '$created_at', $id_reply)";
+        $db = DB::getInstance();
+        $req = $db->prepare($query)->execute();
         return $req;
     }
 }

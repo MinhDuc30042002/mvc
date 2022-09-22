@@ -24,10 +24,13 @@ $controllers = array(
     'newfeed' => ['index'],
 
     // Bài viết của người dùng (client)
-    'posts' => ['create', 'show', 'store', 'index', 'destroy', 'update'],
+    'posts' => ['create', 'show', 'store', 'index', 'destroy', 'update', 'edit'],
 
     // Bình luận của người dùng (client)
-    'comment' => ['destroy', 'show', 'edit', 'store']
+    'comment' => ['destroy', 'show', 'edit', 'store'],
+
+    // Replies bình luận
+    'replies' => ['create', 'store', 'destroy']
 );
 
 // Check controller
